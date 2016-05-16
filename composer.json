@@ -20,7 +20,7 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"cakpep\\giieasyui\\": "cakpep/yii2-gii-easyui"
+			"cakpep\\gii\\": ""
 		}
 	}
 }

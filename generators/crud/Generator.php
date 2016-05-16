@@ -6,7 +6,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace cakpep\giieasyui\generators\crud;
+namespace cakpep\gii\generators\crud;
 
 use Yii;
 use yii\web\Controller;
