@@ -1,0 +1,26 @@
+{
+	"name": "cakpep/yii2-gii-easyui",
+	"description": "Yii2 EasyUi generator for gii",
+	"keywords": ["yii2", "gii","easyui"],
+	"type": "yii2-extension",
+	"license": "BSD-3-Clause",
+	"support": {
+		"issues": "https://github.com/cakpep/yii2-gii-easyui/issues",
+		"source": "https://github.com/cakpep/yii2-gii-easyui"
+	},
+	"authors": [
+		{
+			"name": "Febri M Wicaksono",
+			"email": "febrimaschut@gmail.com"
+		}
+	],
+	"require": {
+		"yiisoft/yii2": "~2.0",
+		"yiisoft/yii2-gii": "~2.0"
+	},
+	"autoload": {
+		"psr-4": {
+			"cakpep\\giieasyui\\": "cakpep/yii2-gii-easyui"
+		}
+	},
+}
