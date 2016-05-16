@@ -1,4 +1,4 @@
-yii2-generators
+yii2 easyuigenerator
 ===============
 
 Yii2 custom generator
@@ -11,13 +11,13 @@ The preferred way to install this extension is through [composer](http://getcomp
 Either run
 
 ```
-composer require cakpep/yii2-gii-easyui "master"
+composer require cakpep/yii2-gii-easyui "dev-master"
 ```
 
 or add
 
 ```
-"mdmsoft/yii2-gii-easyui": "master"
+"cakpep/yii2-gii-easyui": "dev-master"
 ```
 
 to the require section of your `composer.json` file.
