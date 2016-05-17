@@ -1,77 +1,59 @@
 <?php
 
-use yii\helpers\Inflector;
-use yii\helpers\StringHelper;
-
-/* @var $this yii\web\View */
-/* @var $generator yii\gii\generators\crud\Generator */
-
-$urlParams = $generator->generateUrlParams();
-$nameAttribute = $generator->getNameAttribute();
-
 echo "<?php\n";
 ?>
 
-use yii\helpers\Html;
-use <?= $generator->indexWidgetType === 'grid' ? "yii\\grid\\GridView" : "yii\\widgets\\ListView" ?>;
+use yii\web\View;
+use frontend\assets\EasyUiAsset;
+use yii\helpers\Url;
 
-/* @var $this yii\web\View */
-<?= !empty($generator->searchModelClass) ? "/* @var \$searchModel " . ltrim($generator->searchModelClass, '\\') . " */\n" : '' ?>
-/* @var $dataProvider yii\data\ActiveDataProvider */
+/* @var $this View */
+$opts = [
+    'dataUrl' => Url::to(['data']),
+    'saveUrl' => Url::to(['save']),
+    'deleteUrl' => Url::to(['delete']),
+];
 
-$this->title = <?= $generator->generateString(Inflector::pluralize(Inflector::camel2words(StringHelper::basename($generator->modelClass)))) ?>;
-$this->params['breadcrumbs'][] = $this->title;
-?>
-<div class="<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-index">
-
-    <h1><?= "<?= " ?>Html::encode($this->title) ?></h1>
-<?php if(!empty($generator->searchModelClass)): ?>
-<?= "    <?php " . ($generator->indexWidgetType === 'grid' ? "// " : "") ?>echo $this->render('_search', ['model' => $searchModel]); ?>
-<?php endif; ?>
-
-    <p>
-        <?= "<?= " ?>Html::a(<?= $generator->generateString('Create {modelClass}', ['modelClass' => Inflector::camel2words(StringHelper::basename($generator->modelClass))]) ?>, ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-
-<?php if ($generator->indexWidgetType === 'grid'): ?>
-    <?= "<?= " ?>GridView::widget([
-        'dataProvider' => $dataProvider,
-        <?= !empty($generator->searchModelClass) ? "'filterModel' => \$searchModel,\n        'columns' => [\n" : "'columns' => [\n"; ?>
-            ['class' => 'yii\grid\SerialColumn'],
-
-<?php
-$count = 0;
-if (($tableSchema = $generator->getTableSchema()) === false) {
-    foreach ($generator->getColumnNames() as $name) {
-        if (++$count < 6) {
-            echo "            '" . $name . "',\n";
-        } else {
-            echo "            // '" . $name . "',\n";
-        }
-    }
-} else {
-    foreach ($tableSchema->columns as $column) {
-        $format = $generator->generateColumnFormat($column);
-        if (++$count < 6) {
-            echo "            '" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
-        } else {
-            echo "            // '" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
-        }
-    }
+$this->registerJs('var opts = ' . json_encode($opts) . ';');
+//EasyUiAsset::register($this);
+$this->registerJs($this->render('js/script.js'));
+$css = <<<CSS
+#form tr {
+    height: 40px;
 }
+CSS;
+$this->registerCss($css);
 ?>
-
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
-    ]); ?>
-<?php else: ?>
-    <?= "<?= " ?>ListView::widget([
-        'dataProvider' => $dataProvider,
-        'itemOptions' => ['class' => 'item'],
-        'itemView' => function ($model, $key, $index, $widget) {
-            return Html::a(Html::encode($model-><?= $nameAttribute ?>), ['view', <?= $urlParams ?>]);
-        },
-    ]) ?>
-<?php endif; ?>
-
+<table id="dg-kelas" style="width: 100%;" toolbar="#dg-toolbar">
+    <thead>
+        <tr>
+            <th field="id" sortable="true" width="180">id</th>
+            <th field="nama_kelas" sortable="true" width="160">Nama Kelas</th>
+            <th field="tingkat" sortable="true" width="260">Tingkat</th>
+            <th field="aktif" sortable="true" width="260">Status</th>
+            <th field="time_create" sortable="true" width="160">Time Create</th>
+            
+        </tr>
+    </thead>
+</table>
+<div id="dg-toolbar">
+    <a id="btn-new" iconCls="icon-add">Add</a>
+    <a id="btn-edit" iconCls="icon-edit">Edit</a>
+    <a id="btn-delete" iconCls="icon-remove">Delete</a>
+    <span><input id="inp-search"></span>
+</div>
+<div id="dialog" closed="true" modal="true" title=""
+     style="width: 400px;height: auto;">
+    <form id="form" method="post">
+        <table width="100%">            
+            <tr>
+                <th>Nama Kelas</th>
+                <td><input name="nama_kelas" class="easyui-textbox" required="true"></td>
+            </tr>
+            <tr>
+                <th>Tingkat</th>
+                <td><input name="tingkat" class="easyui-textbox" required="true"></td>
+            </tr>
+        </table>
+    </form>
 </div>

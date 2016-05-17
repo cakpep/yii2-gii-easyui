@@ -31,26 +31,25 @@ namespace <?= StringHelper::dirname(ltrim($generator->controllerClass, '\\')) ?>
 
 use Yii;
 use <?= ltrim($generator->modelClass, '\\') ?>;
-<?php if (!empty($generator->searchModelClass)): ?>
-use <?= ltrim($generator->searchModelClass, '\\') . (isset($searchModelAlias) ? " as $searchModelAlias" : "") ?>;
-<?php else: ?>
-use yii\data\ActiveDataProvider;
-<?php endif; ?>
 use <?= ltrim($generator->baseControllerClass, '\\') ?>;
-use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * <?= $controllerClass ?> implements the CRUD actions for <?= $modelClass ?> model.
+ * <?= $controllerClass ?> implements the CRUD EasyUi actions for <?= $modelClass ?> model.
  */
 class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->baseControllerClass) . "\n" ?>
 {
-    public function behaviors()
-    {
+    public function beforeAction($action) {
+        $this->enableCsrfValidation = false;
+        return parent::beforeAction($action);
+    }
+    
+    public function behaviors() {
         return [
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
+                    'save' => ['post'],
                     'delete' => ['post'],
                 ],
             ],
@@ -61,25 +60,9 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
      * Lists all <?= $modelClass ?> models.
      * @return mixed
      */
-    public function actionIndex()
-    {
-<?php if (!empty($generator->searchModelClass)): ?>
-        $searchModel = new <?= isset($searchModelAlias) ? $searchModelAlias : $searchModelClass ?>();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
-<?php else: ?>
-        $dataProvider = new ActiveDataProvider([
-            'query' => <?= $modelClass ?>::find(),
-        ]);
-
-        return $this->render('index', [
-            'dataProvider' => $dataProvider,
-        ]);
-<?php endif; ?>
+    public function actionIndex() {
+        Yii::$app->view->title = '<?= $modelClass ?>';
+        return $this->render('index');
     }
 
     /**
@@ -87,11 +70,13 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
      * <?= implode("\n     * ", $actionParamComments) . "\n" ?>
      * @return mixed
      */
-    public function actionView(<?= $actionParams ?>)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel(<?= $actionParams ?>),
-        ]);
+    public function actionData() {
+        Yii::$app->getResponse()->format = 'json';
+        <?php if (!empty($generator->searchModelClass)) { ?>
+        $searchModel = new <?= isset($searchModelAlias) ? $searchModelAlias : $searchModelClass ?>();
+        $dataProvider = $searchModel->loadData(Yii::$app->getRequest());
+        <?php } ?>
+        return $dataProvider->all();       
     }
 
     /**
@@ -99,75 +84,75 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($id = NULL)
     {
-        $model = new <?= $modelClass ?>();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', <?= $urlParams ?>]);
+        Yii::$app->getResponse()->format = 'json';
+        $post = Yii::$app->request->post();
+        // if id == null create new
+        if ($id === null) {
+            $model = new <?= $modelClass ?>();
+            // set your variable here`
+            //$model->nama_kelas = $post['nama_kelas'];
+            
         } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+            $model = <?= $modelClass ?>::findOne($id);
+            if ($model === null) {
+                return [
+                    'type' => 'error',
+                    'message' => 'Data tidak ditemukan'
+                ];
+            }
+            //set your variable to update here
+            //$model->nama_kelas = $post['nama_kelas'];
         }
+
+        if ($post) {
+            //if ($model->load($post) && $model->save()) {
+            if ($model->save(false)) {
+                return [
+                    'type' => 'success',
+                    'message' => 'save success'
+                ];
+            } else {
+                return [
+                    'type' => 'failed',
+                    'message' => 'save failed'
+                ];
+            }
+        }
+        return[
+            'type' => 'error',
+            'message' => 'data tidak valid',
+            'data' => $model->toArray(),
+        ];
     }
 
     /**
-     * Updates an existing <?= $modelClass ?> model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * <?= implode("\n     * ", $actionParamComments) . "\n" ?>
+     * delete action     
      * @return mixed
      */
-    public function actionUpdate(<?= $actionParams ?>)
-    {
-        $model = $this->findModel(<?= $actionParams ?>);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', <?= $urlParams ?>]);
+    public function actionDelete($id) {
+        Yii::$app->getResponse()->format = 'json';
+        $model = <?= $modelClass ?>::findOne($id);
+        if ($model === null) {
+            return[
+                'type' => 'error',
+                'message' => 'Data tidak ditemukan'
+            ];
+        }
+        $model->aktif = 0;
+        //if ($model->delete()) {
+        if ($model->save(false)) {
+            return [
+                'type' => 'success',
+                'message' => 'delete success'
+            ];
         } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+            return [
+                'type' => 'failed',
+                'message' => 'delete failed'
+            ];
         }
     }
-
-    /**
-     * Deletes an existing <?= $modelClass ?> model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * <?= implode("\n     * ", $actionParamComments) . "\n" ?>
-     * @return mixed
-     */
-    public function actionDelete(<?= $actionParams ?>)
-    {
-        $this->findModel(<?= $actionParams ?>)->delete();
-
-        return $this->redirect(['index']);
-    }
-
-    /**
-     * Finds the <?= $modelClass ?> model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * <?= implode("\n     * ", $actionParamComments) . "\n" ?>
-     * @return <?=                   $modelClass ?> the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel(<?= $actionParams ?>)
-    {
-<?php
-if (count($pks) === 1) {
-    $condition = '$id';
-} else {
-    $condition = [];
-    foreach ($pks as $pk) {
-        $condition[] = "'$pk' => \$$pk";
-    }
-    $condition = '[' . implode(', ', $condition) . ']';
-}
-?>
-        if (($model = <?= $modelClass ?>::findOne(<?= $condition ?>)) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
-        }
-    }
+    
 }

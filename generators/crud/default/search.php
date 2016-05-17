@@ -79,4 +79,38 @@ class <?= $searchModelClass ?> extends <?= isset($modelAlias) ? $modelAlias : $m
 
         return $dataProvider;
     }
+
+
+
+    public function loadData($request)
+    {
+        $query = <?= isset($modelAlias) ? $modelAlias : $modelClass ?>::find();        
+        $query->asArray();
+        // searching
+        if (($q = $request->get('q'))) {
+            $query->orWhere(['id' => $q])
+                    ->orWhere(['tingkat' => $q])
+                    //->orWhere(['aktif' => $q])
+                    ->orWhere(['like', 'nama_kelas', $q]);
+        }
+
+        // sorting
+        if (($sort = $request->get('sort'))) {
+            $order = $request->get('order', 'asc');
+            $query->orderBy([$sort => $order == 'asc' ? SORT_ASC : SORT_DESC]);
+        }
+
+        // paging
+        if (($limit = $request->get('rows'))) {
+            $page = $request->get('page', 1);
+            $total = $query->count();
+            $query->offset(($page - 1) * $limit)->limit($limit);
+            return[
+                'total' => $total,
+                'rows' => $query->all(),
+            ];
+        }
+        return $query;
+    }
+
 }
