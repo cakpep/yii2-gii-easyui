@@ -6,7 +6,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace mdm\gii\generators\easyui;
+namespace cakpep\gii\generators\easyui;
 
 use Yii;
 use yii\web\Controller;
