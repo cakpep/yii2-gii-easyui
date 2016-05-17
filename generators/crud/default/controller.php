@@ -77,14 +77,13 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
     public function actionData() {
         Yii::$app->getResponse()->format = 'json';
         <?php if (!empty($generator->searchModelClass)) { ?>
-        $searchModel = new <?= isset($searchModelAlias) ? $searchModelAlias : $searchModelClass ?>();
+$searchModel = new <?= isset($searchModelAlias) ? $searchModelAlias : $searchModelClass ?>();
         return $searchModel->loadData(Yii::$app->getRequest());
         <?php } ?>
-    }
+}
 
     /**
      * Creates a new <?= $modelClass ?> model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate($id = NULL)
@@ -94,7 +93,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         // if id == null create new
         if ($id === null) {
             $model = new <?= $modelClass ?>();
-            // set your variable here`
+            //set your variable default value here when new
             //$model->nama_kelas = $post['nama_kelas'];
         } else {
             $model = <?= $modelClass ?>::findOne($id);
@@ -104,13 +103,13 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
                     'message' => 'Data tidak ditemukan'
                 ];
             }
-            //set your variable to update here
+            //set your variable default value here when update
             //$model->nama_kelas = $post['nama_kelas'];
         }
 
         if ($post) {
-            //if ($model->load($post) && $model->save()) {
-            if ($model->save(false)) {
+            $data['<?= $modelClass ?>'] = $post;
+            if ($model->load($data) && $model->save(false)) {
                 return [
                     'type' => 'success',
                     'message' => 'save success'

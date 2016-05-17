@@ -88,11 +88,12 @@ class <?= $searchModelClass ?> extends <?= isset($modelAlias) ? $modelAlias : $m
         $query->asArray();
         // searching
         if (($q = $request->get('q'))) {
-            $query->orWhere(['id' => $q])
-                    ->orWhere(['tingkat' => $q])
-                    //->orWhere(['aktif' => $q])
-                    ->orWhere(['like', 'nama_kelas', $q]);
-        }
+            <?php
+            foreach ($searchAttributes as $fieldSearch) {
+                echo "\$query->orWhere(['like','".$fieldSearch."', \$q]);\n\t\t\t";
+            }
+            ?>
+}
 
         // sorting
         if (($sort = $request->get('sort'))) {

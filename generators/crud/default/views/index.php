@@ -1,11 +1,20 @@
 <?php
+/* @var $this yii\web\View */
+/* @var $generator yii\gii\generators\crud\Generator */
+
+/* @var $model \yii\db\ActiveRecord */
+$model = new $generator->modelClass();
+$safeAttributes = $model->safeAttributes();
+if (empty($safeAttributes)) {
+    $safeAttributes = $model->attributes();
+}
 
 echo "<?php\n";
 ?>
 use yii\web\View;
 use yii\helpers\Url;
 
-/* @var $this View */
+/* @var $this yii\web\View */
 $opts = [
     'dataUrl' => Url::to(['data']),
     'saveUrl' => Url::to(['save']),
@@ -24,12 +33,14 @@ $this->registerCss($css);
 <table id="dg-kelas" style="width: 100%;" toolbar="#dg-toolbar">
     <thead>
         <tr>
-            <th field="id" sortable="true" width="180">id</th>
-            <th field="nama_kelas" sortable="true" width="160">Nama Kelas</th>
-            <th field="tingkat" sortable="true" width="260">Tingkat</th>
-            <th field="aktif" sortable="true" width="260">Status</th>
-            <th field="time_create" sortable="true" width="160">Time Create</th>
-        </tr>
+    <?php foreach ($generator->getColumnNames() as $attribute) {
+        if (in_array($attribute, $safeAttributes)) {
+    ?>
+        <th field='<?= $attribute ?>' sortable='true'><?= $generator->getAttributeLabel($attribute) ?></th>
+    <?php
+        }
+    } ?>
+    </tr>
     </thead>
 </table>
 <div id="dg-toolbar">
@@ -38,17 +49,21 @@ $this->registerCss($css);
     <a id="btn-delete" iconCls="icon-remove">Delete</a>
     <span><input id="inp-search"></span>
 </div>
-<div id="dialog" closed="true" modal="true" title="" style="width: 400px;height: auto;">
-    <form id="form" method="post">
-        <table width="100%">
-            <tr>
-                <th>Nama Kelas</th>
-                <td><input name="nama_kelas" class="easyui-textbox" required="true"></td>
-            </tr>
-            <tr>
-                <th>Tingkat</th>
-                <td><input name="tingkat" class="easyui-textbox" required="true"></td>
-            </tr>
-        </table>
-    </form>
+<div id="dialog" closed="true" modal="true" title="Input/Update">
+    <div style="padding:10px 60px 20px 60px">
+        <form id="form" method="post">
+            <table cellpadding="5">
+        <?php foreach ($generator->getColumnNames() as $attribute) {
+                if (in_array($attribute, $safeAttributes)) {
+        ?>
+        <tr>
+                    <td><label for="<?= $attribute ?>"><?= $generator->getAttributeLabel($attribute) ?></label></td>
+                    <td><input name="<?= $attribute ?>" class="easyui-textbox"></td>
+                </tr>
+        <?php
+                }
+            } ?>
+    </table>
+        </form>
+    </div>
 </div>

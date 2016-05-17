@@ -1,4 +1,4 @@
-yii2 easyuigenerator
+yii2 EasyUi generator
 ===============
 
 Yii2 custom generator
@@ -38,7 +38,7 @@ if (!YII_ENV_TEST) {
     $config['modules']['gii'] = [
         'class' => 'yii\gii\Module',
         'generators' => [
-            'crud' => ['class' => 'cakpep\giieasyui\generators\crud\Generator'],
+            'crud' => ['class' => 'cakpep\gii\generators\crud\Generator'],
         ]
     ];
 }
