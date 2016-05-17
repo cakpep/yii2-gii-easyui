@@ -84,7 +84,7 @@ class <?= $searchModelClass ?> extends <?= isset($modelAlias) ? $modelAlias : $m
 
     public function loadData($request)
     {
-        $query = <?= isset($modelAlias) ? $modelAlias : $modelClass ?>::find();        
+        $query = <?= isset($modelAlias) ? $modelAlias : $modelClass ?>::find();
         $query->asArray();
         // searching
         if (($q = $request->get('q'))) {
@@ -110,7 +110,7 @@ class <?= $searchModelClass ?> extends <?= isset($modelAlias) ? $modelAlias : $m
                 'rows' => $query->all(),
             ];
         }
-        return $query;
+        return $query->all();
     }
 
 }

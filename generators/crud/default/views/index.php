@@ -2,9 +2,7 @@
 
 echo "<?php\n";
 ?>
-
 use yii\web\View;
-use frontend\assets\EasyUiAsset;
 use yii\helpers\Url;
 
 /* @var $this View */
@@ -15,7 +13,6 @@ $opts = [
 ];
 
 $this->registerJs('var opts = ' . json_encode($opts) . ';');
-//EasyUiAsset::register($this);
 $this->registerJs($this->render('js/script.js'));
 $css = <<<CSS
 #form tr {
@@ -32,7 +29,6 @@ $this->registerCss($css);
             <th field="tingkat" sortable="true" width="260">Tingkat</th>
             <th field="aktif" sortable="true" width="260">Status</th>
             <th field="time_create" sortable="true" width="160">Time Create</th>
-            
         </tr>
     </thead>
 </table>
@@ -42,10 +38,9 @@ $this->registerCss($css);
     <a id="btn-delete" iconCls="icon-remove">Delete</a>
     <span><input id="inp-search"></span>
 </div>
-<div id="dialog" closed="true" modal="true" title=""
-     style="width: 400px;height: auto;">
+<div id="dialog" closed="true" modal="true" title="" style="width: 400px;height: auto;">
     <form id="form" method="post">
-        <table width="100%">            
+        <table width="100%">
             <tr>
                 <th>Nama Kelas</th>
                 <td><input name="nama_kelas" class="easyui-textbox" required="true"></td>

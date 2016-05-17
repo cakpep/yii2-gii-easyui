@@ -31,6 +31,9 @@ namespace <?= StringHelper::dirname(ltrim($generator->controllerClass, '\\')) ?>
 
 use Yii;
 use <?= ltrim($generator->modelClass, '\\') ?>;
+<?php if (!empty($generator->searchModelClass)) { ?>
+use <?= ltrim($generator->searchModelClass, '\\') ?>;
+<?php } ?>
 use <?= ltrim($generator->baseControllerClass, '\\') ?>;
 use yii\filters\VerbFilter;
 
@@ -39,11 +42,12 @@ use yii\filters\VerbFilter;
  */
 class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->baseControllerClass) . "\n" ?>
 {
+
     public function beforeAction($action) {
         $this->enableCsrfValidation = false;
         return parent::beforeAction($action);
     }
-    
+
     public function behaviors() {
         return [
             'verbs' => [
@@ -66,7 +70,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
     }
 
     /**
-     * Displays a single <?= $modelClass ?> model.
+     * Displays all data <?= $modelClass ?> model.
      * <?= implode("\n     * ", $actionParamComments) . "\n" ?>
      * @return mixed
      */
@@ -74,9 +78,8 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         Yii::$app->getResponse()->format = 'json';
         <?php if (!empty($generator->searchModelClass)) { ?>
         $searchModel = new <?= isset($searchModelAlias) ? $searchModelAlias : $searchModelClass ?>();
-        $dataProvider = $searchModel->loadData(Yii::$app->getRequest());
+        return $searchModel->loadData(Yii::$app->getRequest());
         <?php } ?>
-        return $dataProvider->all();       
     }
 
     /**
@@ -93,7 +96,6 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
             $model = new <?= $modelClass ?>();
             // set your variable here`
             //$model->nama_kelas = $post['nama_kelas'];
-            
         } else {
             $model = <?= $modelClass ?>::findOne($id);
             if ($model === null) {
@@ -128,7 +130,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
     }
 
     /**
-     * delete action     
+     * delete action
      * @return mixed
      */
     public function actionDelete($id) {
@@ -154,5 +156,4 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
             ];
         }
     }
-    
 }
