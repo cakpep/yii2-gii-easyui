@@ -3,7 +3,7 @@ String.prototype.addParam = function (params) {
     return this + (/\?/.test(this) ? '&' : '?') + $.param(params);
 }
 
-$('#dg-kelas').datagrid({
+$('#dg-listview').datagrid({
     singleSelect: true,
     method: 'get',
     rownumbers: true,
@@ -21,7 +21,7 @@ $('#btn-new').linkbutton({
 });
 $('#btn-edit').linkbutton({
     onClick: function () {
-        opts.row = $('#dg-kelas').datagrid('getSelected');
+        opts.row = $('#dg-listview').datagrid('getSelected');
         if (opts.row) {
             opts.action = 'edit';
             $('#form').form('load', opts.row);
@@ -31,17 +31,17 @@ $('#btn-edit').linkbutton({
 });
 $('#btn-delete').linkbutton({
     onClick: function () {
-        var row = $('#dg-kelas').datagrid('getSelected');
+        var row = $('#dg-listview').datagrid('getSelected');
         if (row) {
             $.messager.confirm('Confirm', 'Yakin akan menghapus ini?', function (r) {
-                if (r) {                    
+                if (r) {
                     var url = opts.deleteUrl.addParam({id: row.id});
                     $.post(url, {}, function (data) {
                         if (data.type == 'error') {
-                            $.messager.alert('Alert', data.message, 'alert');                            
+                            $.messager.alert('Alert', data.message, 'alert');
                         } else {
-                            $.messager.alert('Alert', data.message, 'alert');            
-                            $('#dg-kelas').datagrid('reload');
+                            $.messager.alert('Alert', data.message, 'alert');
+                            $('#dg-listview').datagrid('reload');
                         }
                     });
                 }
@@ -52,7 +52,7 @@ $('#btn-delete').linkbutton({
 // search
 $('#inp-search').keypress(function (e) {
     if (e.which == 13) { // jika enter
-        $('#dg-kelas').datagrid('reload', {
+        $('#dg-listview').datagrid('reload', {
             q: $('#inp-search').val(),
         });
     }
@@ -66,7 +66,7 @@ $('#form').form({
             $.messager.alert('Alert', data.message, 'alert');
         } else {
             $.messager.alert('Alert', data.message, 'alert');
-            $('#dg-kelas').datagrid('reload');
+            $('#dg-listview').datagrid('reload');
         }
         opts.row = undefined;
         $('#dialog').dialog('close');

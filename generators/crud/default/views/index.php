@@ -30,7 +30,7 @@ $css = <<<CSS
 CSS;
 $this->registerCss($css);
 ?>
-<table id="dg-kelas" style="width: 100%;" toolbar="#dg-toolbar">
+<table id="dg-listview" style="width: 100%;" toolbar="#dg-toolbar">
     <thead>
         <tr>
     <?php foreach ($generator->getColumnNames() as $attribute) {
