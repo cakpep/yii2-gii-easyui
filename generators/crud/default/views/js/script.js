@@ -26,6 +26,8 @@ $('#btn-edit').linkbutton({
             opts.action = 'edit';
             $('#form').form('load', opts.row);
             $('#dialog').dialog('open');
+        } else {
+            $.messager.alert('Alert', 'Pilih baris yang akan di edit. kemudian tekan tombol edit.', 'alert');
         }
     }
 });
