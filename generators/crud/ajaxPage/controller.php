@@ -94,9 +94,9 @@ $searchModel = new <?= isset($searchModelAlias) ? $searchModelAlias : $searchMod
         if ($id === null) {
             $model = new <?= $modelClass ?>();
             //set your variable default value here when new
-            //$model->nama_kelas = Html::encode($post['nama_kelas']);
+            //$model->nama_kelas = $post['nama_kelas'];
         } else {
-            $model = <?= $modelClass ?>::findOne($id)->where(['aktif'=>1]);
+            $model = <?= $modelClass ?>::findOne($id);
             if ($model === null) {
                 return [
                     'type' => 'error',
@@ -104,7 +104,7 @@ $searchModel = new <?= isset($searchModelAlias) ? $searchModelAlias : $searchMod
                 ];
             }
             //set your variable default value here when update
-            //$model->nama_kelas = Html::encode($post['nama_kelas']);
+            //$model->nama_kelas = $post['nama_kelas'];
         }
 
         if ($post) {
