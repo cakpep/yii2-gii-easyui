@@ -6,7 +6,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace cakpep\gii\generators\crud;
+namespace cakpep\gii\generators\crudV2;
 
 use Yii;
 use yii\web\Controller;
@@ -31,7 +31,7 @@ class Generator extends \yii\gii\generators\crud\Generator
      */
     public function getName()
     {
-        return 'EasyUi CRUD Generator';
+        return 'EasyUi CRUD Generator V2';
     }
 
     /**
