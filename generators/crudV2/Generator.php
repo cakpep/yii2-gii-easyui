@@ -125,21 +125,9 @@ class Generator extends \yii\gii\generators\crud\Generator
 
         $viewPath = $this->getViewPath();
         $templatePath = $this->getTemplatePath() . '/views';
-        foreach (scandir($templatePath) as $file) {
-            if (empty($this->searchModelClass) && $file === '_search.php') {
-                continue;
-            }
+        foreach (scandir($templatePath) as $file) {            
             if (is_file($templatePath . '/' . $file) && pathinfo($file, PATHINFO_EXTENSION) === 'php') {
                 $files[] = new CodeFile("$viewPath/$file", $this->render("views/$file"));
-            }
-            if($file=='js'){
-                if(pathinfo($file.'/script.js', PATHINFO_EXTENSION) === 'js'){
-                    foreach (scandir($templatePath.'/js/') as $jsFile) {
-                        if(pathinfo($templatePath.'/js/'.$jsFile, PATHINFO_EXTENSION) === 'js'){
-                            $files[] = new CodeFile("$viewPath/js/$jsFile", $this->render("views/js/$jsFile"));
-                        }
-                    }
-                }
             }
         }
         return $files;
