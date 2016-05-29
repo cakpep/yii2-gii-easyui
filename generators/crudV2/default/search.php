@@ -102,7 +102,8 @@ class <?= $searchModelClass ?> extends <?= isset($modelAlias) ? $modelAlias : $m
         }
 
         // paging
-        if (($limit = $request->get('rows'))) {
+        $limit = $request->get('rows') ? 10 : $request->get('rows');
+        if ($limit) {
             $page = $request->get('page', 1);
             $total = $query->count();
             $query->offset(($page - 1) * $limit)->limit($limit);
