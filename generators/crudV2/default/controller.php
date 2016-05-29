@@ -6,7 +6,6 @@
 use yii\db\ActiveRecordInterface;
 use yii\helpers\StringHelper;
 
-
 /* @var $this yii\web\View */
 /* @var $generator yii\gii\generators\crud\Generator */
 
@@ -66,7 +65,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
      */
     public function actionIndex() {
         Yii::$app->view->title = '<?= $modelClass ?>';
-        return $this->render('index');
+        return $this->renderAjax('index');
     }
 
     /**
@@ -86,15 +85,16 @@ $searchModel = new <?= isset($searchModelAlias) ? $searchModelAlias : $searchMod
      * Creates a new <?= $modelClass ?> model.
      * @return mixed
      */
-    public function actionCreate($id = NULL)
+    public function actionSave($id = NULL)
     {
         Yii::$app->getResponse()->format = 'json';
         $post = Yii::$app->request->post();
         // if id == null create new
         if ($id === null) {
             $model = new <?= $modelClass ?>();
+            //$model = new <?= $modelClass ?>::find()->where(['aktif'=>1]);
             //set your variable default value here when new
-            //$model->nama_kelas = $post['nama_kelas'];
+            //$model->nama_kelas = Html::encode($post['nama_kelas']);
         } else {
             $model = <?= $modelClass ?>::findOne($id);
             if ($model === null) {
@@ -104,7 +104,7 @@ $searchModel = new <?= isset($searchModelAlias) ? $searchModelAlias : $searchMod
                 ];
             }
             //set your variable default value here when update
-            //$model->nama_kelas = $post['nama_kelas'];
+            //$model->nama_kelas = Html::encode($post['nama_kelas']);
         }
 
         if ($post) {
@@ -135,7 +135,8 @@ $searchModel = new <?= isset($searchModelAlias) ? $searchModelAlias : $searchMod
     public function actionDelete($id) {
         Yii::$app->getResponse()->format = 'json';
         $model = <?= $modelClass ?>::findOne($id);
-        if ($model === null) {
+        //$model = new <?= $modelClass ?>::findOne($id)->where(['aktif'=>1]);
+        if ($model === null || empty($id)) {
             return[
                 'type' => 'error',
                 'message' => 'Data tidak ditemukan'

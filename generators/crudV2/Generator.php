@@ -125,7 +125,7 @@ class Generator extends \yii\gii\generators\crud\Generator
 
         $viewPath = $this->getViewPath();
         $templatePath = $this->getTemplatePath() . '/views';
-        foreach (scandir($templatePath) as $file) {            
+        foreach (scandir($templatePath) as $file) {
             if (is_file($templatePath . '/' . $file) && pathinfo($file, PATHINFO_EXTENSION) === 'php') {
                 $files[] = new CodeFile("$viewPath/$file", $this->render("views/$file"));
             }
@@ -139,7 +139,6 @@ class Generator extends \yii\gii\generators\crud\Generator
     public function getViewPath()
     {
         $module = empty($this->moduleID) ? Yii::$app : Yii::$app->getModule($this->moduleID);
-
         return $module->getViewPath() . '/' . $this->controllerID ;
     }
 
@@ -153,7 +152,6 @@ class Generator extends \yii\gii\generators\crud\Generator
             $route = '/' . $this->moduleID . $route;
         }
         $link = \yii\helpers\Html::a('try it now', [$route], ['target' => '_blank']);
-
         return "The controller has been generated successfully. You may $link.";
     }
 
